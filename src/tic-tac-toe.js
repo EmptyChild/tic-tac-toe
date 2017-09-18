@@ -2,7 +2,7 @@ class TicTacToe {
     constructor() {
 
         this.CurrentPlayerSymbol = 'x';
-        this.Field = new Array(3).fill(new Array(3).fill(null));
+        this.Field = [new Array(3).fill(null), new Array(3).fill(null), new Array(3).fill(null)];
         this.Winner = null;
     }
 
@@ -23,25 +23,25 @@ class TicTacToe {
     }
 
     checkWinCondition() {
-        let WinCondition = new Array(3).fill(this.CurrentPlayerSymbol);
+        let WinCondition = new Array(3).fill(this.CurrentPlayerSymbol).join('');
         for (let row of this.Field) {
-            if (row == WinCondition) {
+            if (row.join('') == WinCondition) {
                 return true;
             }
         }
         for (let column of this.FieldColumns) {
-            if (column == WinCondition) {
+            if (column.join('') == WinCondition) {
                 return true;
             }
         }
-        if (this.FieldDiagonal1 == WinCondition || this.FieldDiagonal2 == WinCondition) {
+        if (this.FieldDiagonal1.join('') == WinCondition || this.FieldDiagonal2.join('') == WinCondition) {
             return true;
         }
         return false;
     }
 
     changePlayer() {
-        this.CurrentPlayerSymbol = (this.CurrentPlayerSymbol == "x") ? "o" : "x";
+        this.CurrentPlayerSymbol = (this.CurrentPlayerSymbol === "x") ? "o" : "x";
     }
 
     getCurrentPlayerSymbol() {
@@ -49,18 +49,20 @@ class TicTacToe {
     }
 
     nextTurn(rowIndex, columnIndex) {
-        if (!this.isFinished() && this.Field[rowIndex][columnIndex] == null) {
+        //console.log(this.Field);
+        if (this.Field[rowIndex][columnIndex] === null) {
             this.Field[rowIndex][columnIndex] = this.CurrentPlayerSymbol;
-            if (this.checkWinCondition()) {
+            //console.log(this.Field);
+            if (this.checkWinCondition() && this.Winner == null) {
                 this.Winner = this.CurrentPlayerSymbol;
-            } else {
-                this.changePlayer();
             }
+            this.changePlayer();
+
         }
     }
 
     isFinished() {
-        return this.isDraw() || this.Winner;
+        return !!this.Winner || this.isDraw();
     }
 
     getWinner() {
@@ -69,7 +71,9 @@ class TicTacToe {
 
     noMoreTurns() {
         for (let row of this.Field) {
-            return !row.includes(null);
+            if (row.includes(null)) {
+                return false;
+            }
         }
         return true;
     }
@@ -79,7 +83,7 @@ class TicTacToe {
     }
 
     getFieldValue(rowIndex, colIndex) {
-        return this.Field[rowIndex][columnIndex];
+        return this.Field[rowIndex][colIndex];
     }
 }
 
